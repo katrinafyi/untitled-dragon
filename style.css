@@ -1,0 +1,10 @@
+textarea {
+  font-family: monospace;
+  height: auto;
+}
+
+canvas {
+  background: red;
+  width: 100%;
+  max-height: 100vh;
+}

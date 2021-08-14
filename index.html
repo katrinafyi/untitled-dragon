@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untiled Dragon Game</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="container">
+    <div class="row">
+      <div class="column">
+
+        <h1>Untitled Dragon Game</h1>
+        <form>
+
+          <fieldset>
+            <label for="testcase-text">Select or paste testcase</label>
+            <input type="file" id="testcase-file">
+            <textarea name="testcase" id="testcase-text" cols="30" rows="10" required></textarea>
+          </fieldset>
+
+          <fieldset>
+            <label for="solution-text">Enter solution steps (optional)</label>
+            <textarea name="steps" id="steps-text" cols="30" rows="1"></textarea>
+          </fieldset>
+
+          <button type="submit">Go</button>
+        </form>
+
+        <hr>
+
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+  </main>
+  <script src="main.js"></script>
+</body>
+
+</html>
