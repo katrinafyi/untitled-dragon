@@ -1,4 +1,5 @@
-///<reference path="main.d.ts"/>
+import { renderDragonBoard } from "./canvas.js";
+import { parseTestCase } from "./dragon.js";
 
 const toArray = (x) => Array.prototype.slice.call(x, 0);
 /** @type {(q: string) => Element} */
@@ -14,12 +15,27 @@ const testInput = $('#testcase-text');
 /** @type {HTMLTextAreaElement} */
 const stepsInput = $('#steps-text');
 
+/** @type {HTMLButtonElement} */
+const submitButton = $('#submit-button');
+
 const params = new URLSearchParams(window.location.search);
 const TESTCASE_TEXT = testInput.value = params.get(testInput.name);
 const STEPS_TEXT = stepsInput.value = params.get(stepsInput.name);
 
-fileInput.onchange = async (ev) => {
+fileInput.onchange = async () => {
   if (!fileInput.files.length)
     return;
   testInput.value = await fileInput.files[0].text();
+  submitButton.disabled = false;
 };
+
+testInput.oninput = stepsInput.oninput = () => {
+  submitButton.disabled = false;
+};
+
+if (TESTCASE_TEXT) {
+  const dragon = parseTestCase(TESTCASE_TEXT);
+  const canvas = $('#canvas');
+  renderDragonBoard(canvas, dragon);
+}
+

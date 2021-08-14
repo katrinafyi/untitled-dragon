@@ -20,7 +20,7 @@
       <div class="column">
 
         <h1>Untitled Dragon Game</h1>
-        <form>
+        <form action="#canvas">
 
           <fieldset>
             <label for="testcase-text">Select or paste testcase</label>
@@ -33,16 +33,17 @@
             <textarea name="steps" id="steps-text" cols="30" rows="1"></textarea>
           </fieldset>
 
-          <button type="submit">Go</button>
+          <button type="submit" id="submit-button" disabled>Go</button>
         </form>
 
         <hr>
-
-        <canvas id="canvas"></canvas>
       </div>
     </div>
   </main>
-  <script src="main.js"></script>
+  <div style="text-align: center;">
+    <canvas id="canvas"></canvas>
+  </div>
+  <script type="module" src="main.js"></script>
 </body>
 
 </html>

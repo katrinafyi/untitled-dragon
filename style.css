@@ -4,7 +4,15 @@ textarea {
 }
 
 canvas {
-  background: red;
-  width: 100%;
-  max-height: 100vh;
+  /* background: red; */
+  /* width: 100%;
+  max-height: 100vh; */
+}
+
+canvas {
+  image-rendering: pixelated;
+}
+
+body {
+  min-height: 150vh;
 }
