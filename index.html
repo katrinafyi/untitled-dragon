@@ -20,6 +20,9 @@
       <div class="column">
 
         <h1>Untitled Dragon Game</h1>
+        <p>
+          <small>Made by Kenton Lam. Report bugs to <a href="https://discordapp.com/users/279196702638997505">impossible#5803</a> on Discord.</small>
+        </p>
         <form action="#game" style="margin-bottom: 0;">
 
           <fieldset>
@@ -43,7 +46,7 @@
     <div class="row" id="game">
       <div class="column column-25">
         <button type="button" id="play-button" disabled>Play</button>
-        <button type="button" id="reset-button">Reset</button>
+        <button type="button" id="reset-button" disabled>Reset</button>
       </div>
       <div class="column">
         <input type="range" id="speed" name="speed" title="Speed"
@@ -55,6 +58,12 @@
   <div style="text-align: center;">
     <canvas id="canvas"></canvas>
   </div>
+  <footer class="container">
+    <div class="row">
+      <div class="column">
+      </div>
+    </div>
+  </main>
   <script type="module" src="main.js"></script>
 </body>
 

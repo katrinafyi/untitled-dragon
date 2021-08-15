@@ -64,8 +64,8 @@ speedInput.onchange = () => {
   interval = parseInt(speedInput.max) - parseInt(speedInput.value);
 };
 
-if (dragon) {
-  playButton.disabled = false;
+if (dragon && moves.length) {
+  playButton.disabled = resetButton.disabled = false;
 }
 
 const renderer = new DragonCanvas(canvas);
