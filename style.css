@@ -17,3 +17,7 @@ canvas {
 body {
   min-height: 150vh;
 }
+
+input[type=range] {
+  height: 3.8rem;
+}

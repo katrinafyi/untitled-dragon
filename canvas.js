@@ -35,7 +35,7 @@ const BG_IMAGES = {
   'E': AIR_IMAGE,
   ' ': AIR_IMAGE,
   'G': AIR_IMAGE,
-  'P': AIR_IMAGE,
+  // 'P': AIR_IMAGE,
 };
 
 /** @type {Partial<Record<import("./dragon").DragonBoardChar, IMAGE_FILES>>} */
