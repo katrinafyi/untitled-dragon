@@ -39,7 +39,7 @@ const dragon = TESTCASE_TEXT ? parseTestCase(TESTCASE_TEXT) : null;
 const moves = STEPS_TEXT ? parseMoves(STEPS_TEXT) : [];
 
 let animating = false;
-let interval = 500; // ms delay between animations
+let interval = 250; // ms delay between animations
 let movesDone = 0;
 
 const setAnimating = (/** @type {boolean} */ x) => {
