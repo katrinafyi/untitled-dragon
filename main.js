@@ -7,16 +7,13 @@ const $ = q => document.querySelector(q);
 /** @type {(q: string) => NodeListOf<Element>} */
 const $$ = q => document.querySelectorAll(q);
 
-/** @type {HTMLInputElement} */
-const fileInput = $('#testcase-file');
-/** @type {HTMLTextAreaElement} */
-const testInput = $('#testcase-text');
+const fileInput = /** @type {HTMLInputElement} */ ($('#testcase-file'));
+const testInput = /** @type {HTMLTextAreaElement} */ ($('#testcase-text'));
 
-/** @type {HTMLTextAreaElement} */
-const stepsInput = $('#steps-text');
+const stepsInput = /** @type {HTMLTextAreaElement} */ ($('#steps-text'));
 
-/** @type {HTMLButtonElement} */
-const submitButton = $('#submit-button');
+const submitButton = /** @type {HTMLButtonElement} */ ($('#submit-button'));
+const canvas = /** @type {HTMLCanvasElement} */ ($('#canvas'));
 
 const params = new URLSearchParams(window.location.search);
 const TESTCASE_TEXT = testInput.value = params.get(testInput.name);
@@ -35,7 +32,5 @@ testInput.oninput = stepsInput.oninput = () => {
 
 if (TESTCASE_TEXT) {
   const dragon = parseTestCase(TESTCASE_TEXT);
-  const canvas = $('#canvas');
   renderDragonBoard(canvas, dragon);
 }
-
