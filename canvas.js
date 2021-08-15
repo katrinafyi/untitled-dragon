@@ -47,6 +47,17 @@ const FG_IMAGES = {
   'P': IMAGE_FILES.ENDERMAN,
 };
 
+const PARTICLE_COLOURS = [
+  // '#4a1090',
+  // '#7222b9',
+  // '#631baa',
+  // '#ad66ea',
+  // '#6b1e7d',
+  // '#e079fa',
+  '#dc52ff'
+];
+const PARTICLE_COUNT = 8;
+
 export class DragonCanvas {
   /** @type {HTMLCanvasElement} */
   canvas;
@@ -127,11 +138,46 @@ export class DragonCanvas {
   }
 
   /**
+   * @param {number} x1
+   * @param {number} y1
+   * @param {number} x2
+   * @param {number} y2
+   */
+  _drawLine(x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const angle = Math.atan2(dy, dx);
+    const length = Math.sqrt(dx*dx + dy*dy);
+
+    this.context.save();
+    this.context.translate(x1, y1);
+    this.context.rotate(angle);
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const o = this.random.random();
+      const w = Math.ceil(this.random.random() * 2) * 2;
+      const h = Math.ceil(this.random.random() * 2) * 2;
+      const j = Math.round(this.random.random() * 8 - 4);
+
+      this.context.fillStyle = PARTICLE_COLOURS[i % PARTICLE_COLOURS.length];
+      this.context.fillRect(o * length - w/2, j -h/2, w, h);
+    }
+
+    this.context.restore();
+  }
+
+  /**
    *
    * @param {[number, number][]} positions
    * @param {number} elapsed
    */
   drawTrail(positions, elapsed = 0) {
-
+    this.random.reset();
+    for (let i = 1; i <= elapsed; i++) {
+      const [r1, c1] = positions[i-1];
+      const [r2, c2] = positions[i];
+      this._drawLine(c1 * UNIT_WIDTH + UNIT_WIDTH/2, r1 * UNIT_HEIGHT + UNIT_HEIGHT/2,
+        c2 * UNIT_WIDTH + UNIT_WIDTH/2, r2 * UNIT_HEIGHT + UNIT_HEIGHT/2);
+    }
   }
 }

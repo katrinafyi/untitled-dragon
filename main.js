@@ -14,6 +14,8 @@ const speedInput = /** @type {HTMLInputElement} */ ($('#speed'));
 
 const submitButton = /** @type {HTMLButtonElement} */ ($('#submit-button'));
 const playButton = /** @type {HTMLButtonElement} */ ($('#play-button'));
+const resetButton = /** @type {HTMLButtonElement} */ ($('#reset-button'));
+
 const canvas = /** @type {HTMLCanvasElement} */ ($('#canvas'));
 
 const params = new URLSearchParams(window.location.search);
@@ -44,12 +46,18 @@ const setAnimating = (/** @type {boolean} */ x) => {
   animating = x;
   playButton.textContent = animating ? 'Pause' : 'Play';
   if (animating) {
-    step();
+    draw();
   }
 }
 
 playButton.onclick = () => {
   setAnimating(!animating);
+};
+
+resetButton.onclick = () => {
+  setAnimating(false);
+  movesDone = 0;
+  draw();
 };
 
 speedInput.onchange = () => {
@@ -64,8 +72,15 @@ const renderer = new DragonCanvas(canvas);
 const positions = processTestCaseAndMoves(dragon, moves);
 
 const step = () => {
+  if (animating)
+    draw();
+}
+
+const draw = () => {
   renderer.drawBoard(dragon.board);
-  renderer.drawPlayer(...positions[movesDone++]);
+  renderer.drawTrail(positions, movesDone);
+  renderer.drawPlayer(...positions[movesDone]);
+  movesDone++;
 
   if (movesDone >= positions.length) {
     setAnimating(false);
@@ -78,5 +93,5 @@ const step = () => {
 }
 
 if (dragon) {
-  renderer.initialise(dragon.rows, dragon.cols).then(step);
+  renderer.initialise(dragon.rows, dragon.cols).then(draw);
 }
