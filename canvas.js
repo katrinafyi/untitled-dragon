@@ -16,8 +16,8 @@ const loadImage = src => new Promise((resolve, reject) => {
 const IMAGE_FILES = {
   BEDROCK: 'bedrock.png',
   DIRT: 'dirt_darker.png',
-  EMERALD: 'emerald.png',
-  ENDERMAN: 'enderman_head.png',
+  EMERALD: 'emerald_shadow.png',
+  ENDERMAN: 'enderman_head_shadow.png',
   LADDER: 'ladder.png',
   LAVA: 'lava_12.png',
   PORTAL: 'portal.png',
