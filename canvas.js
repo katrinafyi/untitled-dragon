@@ -1,3 +1,5 @@
+import { FakeRandom } from "./random.js";
+
 const LINE_WIDTH = 4;
 const UNIT_HEIGHT = 32;
 const UNIT_WIDTH = 32;
@@ -23,20 +25,6 @@ const IMAGE_FILES = {
   COBBLESTONE: 'cobblestone.png',
 };
 
-/** @type {Promise<Record<IMAGE_FILES, HTMLImageElement>>} */
-const imagesPromise = (async () => {
-  const files = Object.values(IMAGE_FILES);
-  const data = await Promise.all(files.map(s => loadImage('assets/' + s)));
-
-  /** @type {Record<IMAGE_FILES, HTMLImageElement>} */
-  const images = {};
-  for (let i = 0; i < files.length; i++) {
-    images[files[i]] = data[i];
-  }
-
-  return images;
-})();
-
 const AIR_IMAGE = IMAGE_FILES.DIRT;
 
 /** @type {Partial<Record<import("./dragon").DragonBoardChar, IMAGE_FILES>>} */
@@ -59,33 +47,91 @@ const FG_IMAGES = {
   'P': IMAGE_FILES.ENDERMAN,
 };
 
-/** @type {(canvas: HTMLCanvasElement, board: import("./dragon").DragonTestCase) => Promise<void>} */
-export const renderDragonBoard = async (canvas, {rows, cols, board}) => {
-  const context = canvas.getContext('2d');
-  const images = await imagesPromise;
+export class DragonCanvas {
+  /** @type {HTMLCanvasElement} */
+  canvas;
+  /** @type {CanvasRenderingContext2D} */
+  context;
+  /** @type {Record<IMAGE_FILES, HTMLImageElement>} */
+  images;
+  /** @type {FakeRandom} */
+  random;
 
-  context.canvas.width = cols * UNIT_WIDTH;
-  context.canvas.height = rows * UNIT_HEIGHT;
+  /**
+   * @param {HTMLCanvasElement!} canvas
+   */
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.context = canvas.getContext('2d');
+    this.random = new FakeRandom();
+  }
 
-  context.lineWidth = LINE_WIDTH;
+  /**
+   * @param {number} rows
+   * @param {number} cols
+   */
+  async initialise(rows, cols) {
+    this.canvas.width = cols * UNIT_WIDTH;
+    this.canvas.height = rows * UNIT_HEIGHT;
 
-  for (let r = 0, y = 0; r < board.length; r++, y += UNIT_HEIGHT) {
-    const row = board[r];
+    this.images = await this.initImages();
+  }
 
-    for (let c = 0, x = 0; c < row.length; c++, x += UNIT_WIDTH) {
-      const char = row[c];
+  async initImages() {
+    const files = Object.values(IMAGE_FILES);
+    const data = await Promise.all(files.map(s => loadImage('assets/' + s)));
 
-      if (BG_IMAGES[char]) {
-        context.translate(x, y);
-        context.drawImage(images[BG_IMAGES[char]], 0, 0);
-        context.translate(-x, -y);
-      }
+    /** @type {Record<IMAGE_FILES, HTMLImageElement>} */
+    const images = {};
+    for (let i = 0; i < files.length; i++) {
+      images[files[i]] = data[i];
+    }
 
-      if (FG_IMAGES[char]) {
-        context.translate(x, y);
-        context.drawImage(images[FG_IMAGES[char]], 0, 0);
-        context.translate(-x, -y);
+    return images;
+  }
+
+  /**
+   * @param {import("./dragon").DragonBoardChar} char
+   * @param {number} x
+   * @param {number} y
+   */
+  _drawChar(char, x, y) {
+    if (BG_IMAGES[char]) {
+      this.context.drawImage(this.images[BG_IMAGES[char]], x, y);
+    }
+
+    if (FG_IMAGES[char]) {
+      this.context.drawImage(this.images[FG_IMAGES[char]], x, y);
+    }
+  }
+
+  /**
+   * @param {import("./dragon").DragonBoard} board
+   */
+  drawBoard(board) {
+    for (let r = 0, y = 0; r < board.length; r++, y += UNIT_HEIGHT) {
+      const row = board[r];
+      for (let c = 0, x = 0; c < row.length; c++, x += UNIT_WIDTH) {
+        const char = row[c];
+        this._drawChar(char, x, y);
       }
     }
   }
-};
+
+  /**
+   * @param {number} row
+   * @param {number} col
+   */
+  drawPlayer(row, col) {
+    this._drawChar('P', col * UNIT_WIDTH, row * UNIT_WIDTH);
+  }
+
+  /**
+   *
+   * @param {[number, number][]} positions
+   * @param {number} elapsed
+   */
+  drawTrail(positions, elapsed = 0) {
+
+  }
+}

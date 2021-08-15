@@ -1,5 +1,5 @@
-import { renderDragonBoard } from "./canvas.js";
-import { parseTestCase } from "./dragon.js";
+import { DragonCanvas } from "./canvas.js";
+import { parseMoves, parseTestCase, processTestCaseAndMoves } from "./dragon.js";
 
 const toArray = (x) => Array.prototype.slice.call(x, 0);
 /** @type {(q: string) => Element} */
@@ -13,6 +13,7 @@ const testInput = /** @type {HTMLTextAreaElement} */ ($('#testcase-text'));
 const stepsInput = /** @type {HTMLTextAreaElement} */ ($('#steps-text'));
 
 const submitButton = /** @type {HTMLButtonElement} */ ($('#submit-button'));
+const playButton = /** @type {HTMLButtonElement} */ ($('#play-button'));
 const canvas = /** @type {HTMLCanvasElement} */ ($('#canvas'));
 
 const params = new URLSearchParams(window.location.search);
@@ -30,7 +31,19 @@ testInput.oninput = stepsInput.oninput = () => {
   submitButton.disabled = false;
 };
 
-if (TESTCASE_TEXT) {
-  const dragon = parseTestCase(TESTCASE_TEXT);
-  renderDragonBoard(canvas, dragon);
+const dragon = TESTCASE_TEXT ? parseTestCase(TESTCASE_TEXT) : null;
+const moves = STEPS_TEXT ? parseMoves(STEPS_TEXT) : [];
+
+if (dragon && moves.length) {
+  playButton.disabled = false;
+}
+
+if (dragon) {
+
+  const renderer = new DragonCanvas(canvas);
+  renderer.initialise(dragon.rows, dragon.cols).then(async () => {
+    renderer.drawBoard(dragon.board);
+    renderer.drawPlayer(...dragon.player);
+    console.log(processTestCaseAndMoves(dragon, moves));
+  });
 }
