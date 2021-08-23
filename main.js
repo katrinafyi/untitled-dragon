@@ -7,7 +7,7 @@ const $ = q => document.querySelector(q);
 /** @type {(q: string) => NodeListOf<Element>} */
 const $$ = q => document.querySelectorAll(q);
 
-const fileInput = /** @type {HTMLInputElement} */ ($('#testcase-file'));
+const fileInputs = /** @type {NodeListOf<HTMLInputElement>} */ ($$('input[type=file]'));
 const testInput = /** @type {HTMLTextAreaElement} */ ($('#testcase-text'));
 const stepsInput = /** @type {HTMLTextAreaElement} */ ($('#steps-text'));
 const speedInput = /** @type {HTMLInputElement} */ ($('#speed'));
@@ -17,12 +17,11 @@ const playButton = /** @type {HTMLButtonElement} */ ($('#play-button'));
 const resetButton = /** @type {HTMLButtonElement} */ ($('#reset-button'));
 
 const canvas = /** @type {HTMLCanvasElement} */ ($('#canvas'));
+const stepsContainer = $('#steps');
 
 const params = new URLSearchParams(window.location.search);
 const TESTCASE_TEXT = testInput.value = params.get(testInput.name);
 const STEPS_TEXT = stepsInput.value = params.get(stepsInput.name);
-
-const fileInputs = /** @type {NodeListOf<HTMLInputElement>} */ ($$('input[type=file]'));
 
 fileInputs.forEach(fileInput => fileInput.onchange = async () => {
   if (!fileInput.files.length)
@@ -37,11 +36,8 @@ testInput.oninput = stepsInput.oninput = () => {
   submitButton.disabled = false;
 };
 
-
-const dragon = TESTCASE_TEXT ? parseTestCase(TESTCASE_TEXT) : null;
-const moves = STEPS_TEXT ? parseMoves(STEPS_TEXT) : [];
-
 let animating = false;
+let timer = 0;
 let interval = 250; // ms delay between animations
 let movesDone = 0;
 
@@ -67,6 +63,21 @@ speedInput.onchange = () => {
   interval = parseInt(speedInput.max) - parseInt(speedInput.value);
 };
 
+const dragon = TESTCASE_TEXT ? parseTestCase(TESTCASE_TEXT) : null;
+const moves = STEPS_TEXT ? parseMoves(STEPS_TEXT) : [];
+
+const moveElements = moves.map((move, i) => {
+  const span = document.createElement('span');
+  span.textContent = move;
+  span.onclick = () => {
+    movesDone = i + 1;
+    setAnimating(false);
+    draw();
+  };
+  stepsContainer.appendChild(span);
+  return span;
+});
+
 if (dragon && moves.length) {
   playButton.disabled = resetButton.disabled = false;
 }
@@ -80,9 +91,19 @@ const step = () => {
 }
 
 const draw = () => {
+  if (timer) {
+    clearTimeout(timer);
+    timer = 0;
+  }
+
+  moveElements.forEach((el, i) => {
+    el.className = i < movesDone ? 'done' : '';
+  });
+
   renderer.drawBoard(dragon.board);
   renderer.drawTrail(positions, movesDone);
   renderer.drawPlayer(...positions[movesDone]);
+  moveElements[movesDone].className = 'done';
   movesDone++;
 
   if (movesDone >= positions.length) {
@@ -91,7 +112,7 @@ const draw = () => {
   }
 
   if (animating) {
-    setTimeout(() => requestAnimationFrame(step), interval);
+    timer = setTimeout(() => requestAnimationFrame(step), interval);
   }
 }
 

@@ -21,3 +21,20 @@ body {
 input[type=range] {
   height: 3.8rem;
 }
+
+#steps {
+  overflow-wrap: break-word;
+}
+
+#steps span {
+  white-space: nowrap;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  cursor: pointer;
+
+  color: lightgrey;
+}
+
+#steps span.done {
+  color: unset;
+}
