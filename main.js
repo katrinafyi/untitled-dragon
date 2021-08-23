@@ -103,7 +103,6 @@ const draw = () => {
   renderer.drawBoard(dragon.board);
   renderer.drawTrail(positions, movesDone);
   renderer.drawPlayer(...positions[movesDone]);
-  moveElements[movesDone].className = 'done';
   movesDone++;
 
   if (movesDone >= positions.length) {
