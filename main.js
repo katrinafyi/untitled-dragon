@@ -22,13 +22,16 @@ const params = new URLSearchParams(window.location.search);
 const TESTCASE_TEXT = testInput.value = params.get(testInput.name);
 const STEPS_TEXT = stepsInput.value = params.get(stepsInput.name);
 
+const fileInputs = /** @type {NodeListOf<HTMLInputElement>} */ ($$('input[type=file]'));
 
-fileInput.onchange = async () => {
+fileInputs.forEach(fileInput => fileInput.onchange = async () => {
   if (!fileInput.files.length)
     return;
-  testInput.value = await fileInput.files[0].text();
+  const textInput = /** @type {HTMLInputElement} */
+      (document.getElementById(fileInput.id.replace('-file', '-text')));
+  textInput.value = await fileInput.files[0].text();
   submitButton.disabled = false;
-};
+});
 
 testInput.oninput = stepsInput.oninput = () => {
   submitButton.disabled = false;
